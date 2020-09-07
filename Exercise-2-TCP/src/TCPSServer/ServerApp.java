@@ -57,7 +57,7 @@ public class ServerApp extends Thread {
                 response = new StringBuilder(request).reverse().toString(); //Reverse the response text to string and return it to the client
                 out.println(response);
                 // Log response on the server's console, too
-                System.out.println("Log: " + request + " - " + response);
+                System.out.println("Log: " + response);
             }
         }
     }
@@ -127,14 +127,14 @@ class ClientHandler extends Thread {
 
                 if (request.equals("stop")) {
                     out.println("Good bye, client!");
-                    System.out.println("Log: " + request + " client!");
+                    System.out.println("[Log]\t" + "Client: " + openSocket.getPort() + "\t\tMessage: " + request);
                     break;
                 } else {
                     // server responses
                     response = new StringBuilder(request).reverse().toString(); //Reverse the response text to string and return it to the client
                     out.println(response);
                     // Log response on the server's console, too
-                    System.out.println("Log: " + response);
+                    System.out.println("[Log]\t" + "Client: " + openSocket.getPort() + "\t\tMessage: " + response);
                 }
             }
         }
