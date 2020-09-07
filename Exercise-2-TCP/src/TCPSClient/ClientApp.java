@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class ClientApp {
+public class ClientApp extends Thread {
     // Three I/O streams attached to the client:
     static Scanner cin;        // incoming stream from the local console
     static PrintWriter out;    // outcoming stream from client to server (the request)
