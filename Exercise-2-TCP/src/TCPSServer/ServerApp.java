@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class ServerApp extends Thread {
@@ -12,7 +11,7 @@ public class ServerApp extends Thread {
     public static ServerSocket serverSocket = null; // Server gets found
     public static Socket openSocket = null;         // Server communicates with the client
 
-    public static Socket configureServer() throws UnknownHostException, IOException
+/*    public static Socket configureServer() throws UnknownHostException, IOException
     {
         // get server's own IP address
         String serverIP = InetAddress.getLocalHost().getHostAddress();
@@ -60,7 +59,7 @@ public class ServerApp extends Thread {
                 System.out.println("Log: " + response);
             }
         }
-    }
+    }*/
 
     public static void main(String[] args) throws IOException
     {
@@ -76,14 +75,13 @@ public class ServerApp extends Thread {
         while(true) {
             try
             {
-                openSocket = serverSocket.accept();
+                openSocket = serverSocket.accept(); //allow client to connect
                 System.out.print("Client connected: " + openSocket);
 
                 DataInputStream dis = new DataInputStream((openSocket.getInputStream()));
                 DataOutputStream dop = new DataOutputStream(openSocket.getOutputStream());
 
-                System.out.println("Assigning thread for this client: " + openSocket);
-
+                System.out.println("Assigned thread for client: " + openSocket);
                 Thread t = new ClientHandler(openSocket, dis, dop);
                 t.start();
             }
@@ -98,35 +96,31 @@ public class ServerApp extends Thread {
 
 class ClientHandler extends Thread {
     final Socket openSocket;
-    final DataInputStream dis;
-    final DataOutputStream dop;
+    final DataInputStream dataInputStream;
+    final DataOutputStream dataOutputStream;
 
 
     // Constructor
     public ClientHandler(Socket openSocket, DataInputStream dis, DataOutputStream dop) {
         this.openSocket = openSocket;
-        this.dis = dis;
-        this.dop = dop;
+        this.dataInputStream = dis;
+        this.dataOutputStream = dop;
     }
 
     @Override
     public void run()  {
 
-            String request, response;
-            // two I/O streams attached to the server socket:
-            Scanner in;         // Scanner is the incoming stream (requests from a client)
-            PrintWriter out;    // PrintWriter is the outcoming stream (the response of the server)
-            in = new Scanner(dis);
-            out = new PrintWriter(dop, true);
-            // Parameter true ensures automatic flushing of the output buffer
+            String request, response; //two I/O streams attached to the server socket, request and response (input and output):
+            Scanner in = new Scanner(dataInputStream); //The scanner is the incoming stream (the requests from the client)
+            PrintWriter out = new PrintWriter(dataOutputStream, true); // PrintWriter is the outcoming stream (the response the client get back from the server).
+            //Autoflush: true automatically flush the output buffer.
 
-            // Server keeps listening for request and reading data from the Client,
-            // until the Client sends "stop" requests
+            // Server keeps listening for request and reading data from the client untill the "stop" command is sent
             while (in.hasNextLine()) {
                 request = in.nextLine();
 
                 if (request.equals("stop")) {
-                    out.println("Good bye, client!");
+                    out.println("See you later, client!!");
                     System.out.println("[Log]\t" + "Client: " + openSocket.getPort() + "\t\tMessage: " + request);
                     break;
                 } else {
