@@ -84,6 +84,8 @@ public class ServerApp extends Thread {
                 System.out.println("Assigned thread for client: " + openSocket);
                 Thread t = new ClientHandler(openSocket, dis, dop);
                 t.start();
+
+                System.out.println(java.lang.Thread.activeCount());
             }
             catch(Exception e)
             {
@@ -101,10 +103,10 @@ class ClientHandler extends Thread {
 
 
     // Constructor
-    public ClientHandler(Socket openSocket, DataInputStream dis, DataOutputStream dop) {
+    public ClientHandler(Socket openSocket, DataInputStream dataInputStream, DataOutputStream dataOutputStream) {
         this.openSocket = openSocket;
-        this.dataInputStream = dis;
-        this.dataOutputStream = dop;
+        this.dataInputStream = dataInputStream;
+        this.dataOutputStream = dataOutputStream;
     }
 
     @Override
